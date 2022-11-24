@@ -29,6 +29,13 @@ const Navbar = () => {
     line-height: 40px;
     margin-bottom: 0px;
     padding: 0;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: #6c757d;
+      text-shadow: 2px 2px 2px black;
+    }
 
     @media only screen and ${device.lg}{
       font-size: 2rem;
@@ -59,6 +66,11 @@ const Navbar = () => {
       color: #6c757d;
       text-decoration: none;
       margin-right: 20px;
+      
+      &:hover {
+        color: #6c757d;
+        text-shadow: 2px 2px 2px black;
+      }
 
       @media only screen and ${device.lg}{
         margin-right: 60px;

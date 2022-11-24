@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import ItemList from './ItemList'
 
 const ItemListContainer = ({greeting}) => {
   const GretingWrapper = styled.div`
@@ -14,7 +15,10 @@ const ItemListContainer = ({greeting}) => {
   `
 
   return (
+    <>
     <GretingWrapper>Bienvend@ <span>{greeting}</span></GretingWrapper>
+    <ItemList />
+    </>
   )
 }
 

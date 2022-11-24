@@ -17,8 +17,12 @@ const CartWidget = () => {
         span {
             margin-left: 5px;
         }
+
+        &:hover {
+            background-color: #bebebe;
+            border-color: #bebebe;
+        }
     `
-    
   return (
 
         <CartBtn>
