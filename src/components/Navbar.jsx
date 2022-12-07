@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import Nav from 'react-bootstrap/Nav'
 import  CartWidget  from './CartWidget'
 import {device} from '../breakpoints'
+import {Link} from 'react-router-dom'
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const Navbar = () => {
   const NavBarContainer = styled.nav`
@@ -35,6 +37,11 @@ const Navbar = () => {
     &:hover {
       color: #6c757d;
       text-shadow: 2px 2px 2px black;
+    }
+
+    a {
+      text-decoration: none;
+      color: #6c757d;
     }
 
     @media only screen and ${device.lg}{
@@ -89,15 +96,34 @@ const Navbar = () => {
     }
   `
 
+  const NavDropdownItem = styled(NavDropdown.Item)`
+  text-align: center;
+
+    a {
+      margin-right: 0;
+      text-align: center;
+    }
+
+    @media only screen and ${device.lg}{
+      margin-right: 0px;
+    }
+  `
+
   return (
     <NavBarContainer>
-     <BrandName>Renée Shoes</BrandName>
+     <BrandName>
+        <Link to={'/'}>Renée Shoes</Link>
+     </BrandName>
      <NavContainer>
-      <NavItem>
-          <Nav.Link href="/">Productos</Nav.Link>
+        <NavItem>
+          <NavDropdown title="Productos" id="basic-nav-dropdown">
+              <NavDropdownItem><Link to="/category/1">Zapatos</Link></NavDropdownItem>
+              <NavDropdownItem><Link to="/category/2">Carteras</Link></NavDropdownItem>
+              <NavDropdownItem><Link to="/">Ver Todos</Link></NavDropdownItem>
+          </NavDropdown>
         </NavItem>
         <NavItem>
-          <Nav.Link href="/">Nosotros</Nav.Link>
+          <Link to={'/about'}>Nosotros</Link>
         </NavItem>
         <NavItem>
           <Nav.Link href="/">Login</Nav.Link>

@@ -1,35 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import styled from 'styled-components'
 import Item from './Item'
-import { products } from '../mocks/products'
 
-const ItemList = () => {
-  const [items, setItems] = useState([])
+const ItemList = ({items}) => {
 
-  useEffect(() => {
-   getProducts().then(response => {
-    setItems(response)
-   }).catch((error) => {
-    console.log(error)
-   })
-  }, [])
-
-  const getProducts = () => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(products)
-        }, 2000);
-      })
-  }
+  const ItemListContainer = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  `
 
   return (
-    <div>
-      Products
-      <ul>
+    <ItemListContainer>
         {items.map(product => 
             <Item product={product} key={product.id}/>
         )}
-      </ul>
-    </div>
+    </ItemListContainer>
   )
 }
 
