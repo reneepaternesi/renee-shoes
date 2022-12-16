@@ -1,11 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from 'react-bootstrap/Container';
 import { getCurrency, getSizes } from '../utils';
 import Table from 'react-bootstrap/Table';
 import styled from 'styled-components'
 import Dropdown from 'react-bootstrap/Dropdown';
+import ItemCount from './ItemCount'
+import { DropdownButton } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { useCart } from '../context/cartContext';
+import Loader from './Loader';
 
-const ItemDetail = ({product}) => {
+const ItemDetail = ({loaded, product}) => {
+  const [size, setSize] = useState(0)
+  const { addProduct, products } = useCart()
 
   const ContainerWrapper = styled(Container)`
     padding: 3rem 0;
@@ -35,7 +42,7 @@ const ItemDetail = ({product}) => {
     color: #6c757d;
     font-size: 1rem;
     text-align: justify;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   `
 
   const ProductStock = styled.div`
@@ -43,6 +50,7 @@ const ItemDetail = ({product}) => {
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 2rem;
+    text-align: left;
   `
 
   const ProductPrice = styled.div`
@@ -50,6 +58,54 @@ const ItemDetail = ({product}) => {
     font-size: 1.3rem;
     font-weight: bold;
     margin-bottom: 2rem;
+    text-align: left;
+  `
+
+  const GridContainer = styled.div`
+    display: grid;
+    grid-template-columns: 290px max-content;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+
+    span {
+      padding: 8px 8px;
+    }
+  `
+
+  const SizesDropdownButton= styled(DropdownButton)`
+    text-align: left;
+    margin-bottom: 3rem;
+
+    button {
+      background-color: #e9ecef;
+      color: black;
+      border-color: #bebebe;
+      min-width: 155px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &:hover {
+        background-color: #bebebe;
+        color: black;
+        border-color: black;
+      }
+    }
+  `
+
+  const CheckoutBtn = styled(Link)`
+    background-color: #6c757d;
+    color: white;
+    border: 1px solid #bebebe;
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 18px;
+
+    &:hover {
+      color: white;
+      background-color: #bebebe;
+    }
   `
 
   const sizes= [
@@ -61,54 +117,75 @@ const ItemDetail = ({product}) => {
     { talle: 40, largo: 26.2 },
     { talle: 41, largo: 27 },
   ]
+
+  const dropdownSizes = getSizes(sizes)
+
+  const handleAddProduct = (qty) => {
+    const cartProduct = {
+      id: product.id,
+      price: product.price,
+      title: product.title,
+      quantity: qty,
+      pictureUrl: product.pictureUrl,
+      size: size
+    }
+    addProduct(cartProduct)
+  }
+
   return (
-    <ContainerWrapper>
-      <ColContainer>
-        <img src={product.pictureUrl} alt={product.name}/>
-      </ColContainer>
-      <ColContainer>
-          <ProductName>{product.title}</ProductName>
-          <ProductDescription>{product.description}</ProductDescription>
-          <ContainerWrapper>
-            <ColContainer>
-                <ProductStock>Cantidad Disponible: {product.stock} </ProductStock>
-                  <Table striped bordered>
-                    <thead>
-                      <tr>
-                        <th>Talle</th>
-                        <th>Largo</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        {sizes.map(size => 
+    <>
+    {!loaded && 
+      <Loader />
+    }
+    {loaded && 
+      <ContainerWrapper>
+        <ColContainer>
+          <img src={product.pictureUrl} alt={product.name}/>
+        </ColContainer>
+        <ColContainer>
+            <ProductName>{product.title}</ProductName>
+            <ProductDescription>{product.description}</ProductDescription>
+            <Table striped bordered>
+                      <thead>
                         <tr>
-                          <td>
-                            {size.talle}
-                          </td>
-                          <td>
-                            {size.largo}
-                          </td>
+                          <th>Talle</th>
+                          <th>Largo</th>
                         </tr>
-                        )}
-                    </tbody>
-                  </Table>
-            </ColContainer>
-            <ColContainer>
-              <ProductPrice>Precio: {getCurrency(product.price)}</ProductPrice>
-                <Dropdown>
-                    <Dropdown.Toggle id="dropdown-basic">
-                      Seleccione Talle
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                    {getSizes(sizes).map(size => 
-                      <Dropdown.Item>{size.text}</Dropdown.Item>
-                    )}
-                    </Dropdown.Menu>
-                </Dropdown>
-            </ColContainer>
-        </ContainerWrapper>
-      </ColContainer>
-    </ContainerWrapper>
+                      </thead>
+                      <tbody>
+                          {sizes.map(size => 
+                          <tr>
+                            <td>
+                              {size.talle}
+                            </td>
+                            <td>
+                              {size.largo}
+                            </td>
+                          </tr>
+                          )}
+                      </tbody>
+              </Table>
+            <GridContainer>
+              <span>
+                <ProductPrice >Precio: {getCurrency(product.price)}</ProductPrice>
+                <ProductStock>Cantidad Disponible: {product.stock} </ProductStock>
+                <SizesDropdownButton id="size-selector" title={size || dropdownSizes[0].name}>
+                  {dropdownSizes.map(size => 
+                    <Dropdown.Item value={size.value} onClick={() => setSize(size.value)}>{size.name}</Dropdown.Item>
+                  )}
+                </SizesDropdownButton>
+              </span>
+              <span>
+                <ItemCount maxValue={product.stock} onAdd={handleAddProduct} sizeSelected={size>0}/>
+              </span>
+            </GridContainer>
+            {products.length > 0 && 
+              <CheckoutBtn to='/cart'>Terminar mi compra</CheckoutBtn>
+            }
+        </ColContainer>
+      </ContainerWrapper>
+    }
+    </>
   )
 }
 

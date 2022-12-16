@@ -8,7 +8,7 @@ export function getCurrency(value) {
 
 export function getSizes(objArray) {
   var sizesList = objArray.map(function(o) {
-    return o.talle;
+    return {value: o.talle, name: o.talle};
   });
-  return [ { text: "Seleccione talle", value: null }, ...sizesList];
+  return [ { name: "Seleccione talle", value: null }, ...sizesList];
 }

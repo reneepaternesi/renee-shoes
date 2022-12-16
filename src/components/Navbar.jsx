@@ -5,8 +5,12 @@ import  CartWidget  from './CartWidget'
 import {device} from '../breakpoints'
 import {Link} from 'react-router-dom'
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useCart } from '../context/cartContext'
 
 const Navbar = () => {
+  const { productsTotal } = useCart()
+
+
   const NavBarContainer = styled.nav`
     background-color: #d0dede;
     width: 100%;
@@ -129,9 +133,11 @@ const Navbar = () => {
           <Nav.Link href="/">Login</Nav.Link>
         </NavItem>
       </NavContainer>
-      <BtnContainer>
-        <CartWidget />
-      </BtnContainer>
+      {productsTotal > 0 && 
+        <BtnContainer>
+          <CartWidget />
+        </BtnContainer>
+      }
     </NavBarContainer>
   )
 }

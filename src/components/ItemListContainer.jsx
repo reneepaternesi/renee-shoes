@@ -3,10 +3,12 @@ import styled from 'styled-components'
 import ItemList from './ItemList'
 import { useParams } from 'react-router-dom';
 import { products } from '../mocks/products'
+import Loader from './Loader';
 
 const ItemListContainer = ({greeting}) => {
   const { categoryId } = useParams()
   const [items, setItems] = useState([])
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
    getProducts().then(response => {
@@ -15,6 +17,7 @@ const ItemListContainer = ({greeting}) => {
       const filteredResponse = response.filter((item => item.category === Number(categoryId)))
       setItems(filteredResponse)
     }
+    setLoaded(true)
    }).catch((error) => {
     console.log(error)
    })
@@ -43,7 +46,12 @@ const ItemListContainer = ({greeting}) => {
   return (
     <>
     <GretingWrapper>Bienvend@ <span>{greeting}</span></GretingWrapper>
-    <ItemList items={items}/>
+    {!loaded && 
+      <Loader />
+    }
+    {loaded && 
+      <ItemList items={items}/>
+    }
     </>
   )
 }
