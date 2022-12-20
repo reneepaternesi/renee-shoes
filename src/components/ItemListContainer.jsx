@@ -2,35 +2,27 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import ItemList from './ItemList'
 import { useParams } from 'react-router-dom';
-import { products } from '../mocks/products'
 import Loader from './Loader';
+import { getDocs, collection, getFirestore, query, where } from 'firebase/firestore'
 
 const ItemListContainer = ({greeting}) => {
   const { categoryId } = useParams()
   const [items, setItems] = useState([])
   const [loaded, setLoaded] = useState(false)
 
-  useEffect(() => {
-   getProducts().then(response => {
-    setItems(response)
+  useEffect( () => {
+    const db = getFirestore()
+    let collectionRef
     if(categoryId) {
-      const filteredResponse = response.filter((item => item.category === Number(categoryId)))
-      setItems(filteredResponse)
+      collectionRef = query(collection(db, 'Products'), where("categoryId", "==",  Number(categoryId)))
+    } else {
+      collectionRef = collection(db, 'Products')
     }
-    setLoaded(true)
-   }).catch((error) => {
-    console.log(error)
-   })
-  }, [categoryId, items])
-
-  const getProducts = () => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(products)
-        }, 2000);
-      })
-  }
-
+    getDocs(collectionRef).then((snapshot) => {
+      setItems(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data()})))
+      setLoaded(true)
+    })
+  }, [categoryId])
 
   const GretingWrapper = styled.div`
     font-family: 'Rock Salt', curave;

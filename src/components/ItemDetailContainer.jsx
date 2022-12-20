@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ItemDetail from './ItemDetail'
-import { product } from '../mocks/product'
 import { useParams } from 'react-router-dom';
+import { doc, getDoc, getFirestore } from 'firebase/firestore'
 
 const ItemDetailContainer = () => {
   const { productId } = useParams()
@@ -9,21 +9,13 @@ const ItemDetailContainer = () => {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    getProduct(productId).then(response => {
-     setItem(response)
-     setLoaded(true)
-    }).catch((error) => {
-     console.log(error)
+    const db = getFirestore()
+    const productRef = doc(db, 'Products', productId)
+    getDoc(productRef).then((snapshot) => {
+      setItem({ id: snapshot.id, ...snapshot.data() })
+      setLoaded(true)
     })
    }, [productId])
-
-   const getProduct = (id) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(product)
-      }, 2000);
-    })
-}
 
   return (
     <ItemDetail loaded={loaded} product={item} />

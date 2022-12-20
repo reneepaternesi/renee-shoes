@@ -26,6 +26,10 @@ const ItemDetail = ({loaded, product}) => {
   const ColContainer = styled.div`
     flex-basis: 30rem;
     margin: 0 20px;
+
+    img {
+      max-height: 960px;
+    }
   `
 
   const ProductName = styled.div`
