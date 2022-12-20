@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 
-const ItemCount = ({maxValue, onAdd, sizeSelected}) => {
+const ItemCount = ({maxValue, onAdd, sizeSelected, isShoe}) => {
     const [counter, setCounter] = useState(0)
 
     const ItemCounterWrapper = styled.div`
@@ -84,17 +84,17 @@ const ItemCount = ({maxValue, onAdd, sizeSelected}) => {
                 readOnly = "true"
                 >
                 </Form.Control>
-                <Button variant="outline-secondary" id="button-addon1" onClick={add} disabled={counter === maxValue || !sizeSelected}>
+                <Button variant="outline-secondary" id="button-addon1" onClick={add} disabled={counter === maxValue || (!sizeSelected && isShoe)}>
                 +
                 </Button>
             </InputGroupWrapper>
-            <AddToCartBtn variant="outline-primary" size="sm" onClick={handleClick} disabled={!sizeSelected}>
+            <AddToCartBtn variant="outline-primary" size="sm" onClick={handleClick} disabled={!sizeSelected && isShoe}>
                 Agregar al carrito
             </AddToCartBtn>
             { counter === maxValue && 
                 <Msg>Se alcanzó la cantidad máxima disponible</Msg>
             }
-            {!sizeSelected &&
+            {!sizeSelected && isShoe &&
                 <Msg>Selecciona talle</Msg>
             }
         </ItemCounterWrapper>
