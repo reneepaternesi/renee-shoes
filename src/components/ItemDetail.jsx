@@ -131,7 +131,8 @@ const ItemDetail = ({loaded, product}) => {
       title: product.title,
       quantity: qty,
       pictureUrl: product.pictureUrl,
-      size: size
+      size: size,
+      categoryId: product.categoryId
     }
     addProduct(cartProduct)
   }

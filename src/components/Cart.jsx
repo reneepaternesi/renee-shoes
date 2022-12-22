@@ -1,18 +1,23 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useCart } from '../context/cartContext'
 import styled from 'styled-components'
 import { getCurrency } from '../utils';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
+import { addDoc, collection, getFirestore, updateDoc, doc, getDoc } from 'firebase/firestore'
+import Toast from 'react-bootstrap/Toast';
 
 const Cart = () => {
-  const { products, removeProduct } = useCart()
+  const { products, removeProduct, clear } = useCart()
+  const [orderId, setOrderId] = useState('')
+  const [showToast, setShowToast] = useState(false);
 
   const CartWrapper = styled.div`
     background-color: #e9ecef;
     width: 100%;
     height: 100vh;
     color: #6c757d;
+    position: relative;
   `
 
   const CartTitle = styled.div`
@@ -94,10 +99,73 @@ const Cart = () => {
         }
   `
 
+  const CheckoutBtn = styled(Button)`
+    background-color: #6c757d;
+    color: white;
+    border: 1px solid #bebebe;
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 18px;
+
+    &:hover {
+      color: white;
+      background-color: #bebebe;
+    }
+  `
+
+  const OrderToast = styled(Toast) `
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  `
+
   const getTotalPrice = () => {
     return getCurrency(products.reduce((subtotal, product) => subtotal + product.price * product.quantity,0))
   }
 
+  const isShoe = (product) => {
+    return product.categoryId === 1
+  }
+
+  const createOrder = () => {
+    const user = {
+      email: "renee@test.com",
+      name: "Renee",
+      phone: "1234"
+    }
+
+    const order = {
+      buyer: user,
+      items: products.map(product => {
+        return {id: product.id, title: product.title, price: product.price, quiantity: product.quantity}
+      }),
+      total: products.reduce((subtotal, p)=> subtotal + (p.price * p.quantity), 0)
+    }
+
+    const db = getFirestore()
+    const ordersCollection = collection(db, 'Orders')
+
+    addDoc(ordersCollection, order).then(({ id }) => {
+      setOrderId(id)
+      setShowToast(true)
+      updateStocks()
+      clear()
+    })
+  }
+
+  const updateStocks = () => {
+    const db = getFirestore()
+    let productItem
+    products.forEach((product) => {
+      const productRef = doc(db, 'Products', product.id)
+      getDoc(productRef).then((snapshot) => {
+        productItem = { id: snapshot.id, ...snapshot.data()}
+        updateDoc(productRef, {stock: Number(productItem.stock - product.quantity)})
+      })
+    })
+  }
+  
   return (
     <CartWrapper>
       <CartTitle>Shopping Cart</CartTitle>
@@ -137,7 +205,7 @@ const Cart = () => {
                 <p>{product.title}</p>
               </span>
               <span>
-                {product.size}
+                {isShoe(product) ? product.size : '-'}
               </span>
               <span>
                 {product.quantity}
@@ -156,6 +224,22 @@ const Cart = () => {
         <TotalWrapper>Total: {getTotalPrice()}</TotalWrapper>
       </>
       }
+      {products.length > 0 &&
+        <CheckoutBtn onClick={createOrder}>Terminar mi compra</CheckoutBtn>
+      }
+      <OrderToast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+            <Toast.Header>
+              <img
+                src="/imgs/success-order.png"
+                className="rounded"
+                width={25}
+                height={20}
+                alt=""
+              />
+              <strong className="me-auto">Compra realizada!</strong>
+            </Toast.Header>
+            <Toast.Body>Tu orden <strong>${orderId}</strong> ha sido registrada!</Toast.Body>
+      </OrderToast>
     </CartWrapper>
   )
 }
