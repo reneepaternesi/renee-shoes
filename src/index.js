@@ -7,16 +7,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { CartContextProvider } from './context/cartContext'
 import { initializeApp } from "firebase/app";
 
-
 const firebaseConfig = {
-  apiKey: "AIzaSyC_8ObWhoxNKly7bEVp5-zJsoQDdvH4A8I",
-  authDomain: "renee-shoes.firebaseapp.com",
-  projectId: "renee-shoes",
-  storageBucket: "renee-shoes.appspot.com",
-  messagingSenderId: "712088726156",
-  appId: "1:712088726156:web:375c859b79aef0892fa9a9",
-  measurementId: "G-LG02DK6SRY"
-};
+    apiKey: process.env.REACT_APP_APPI_KEY,
+    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_APP_ID,
+    measurementId: process.env.REACT_APP_MEASUREMENT_ID
+  };
 
 // Initialize Firebase
 // eslint-disable-next-line no-unused-vars
