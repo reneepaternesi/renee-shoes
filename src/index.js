@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { CartContextProvider } from './context/cartContext'
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 
 
 const firebaseConfig = {
@@ -20,7 +19,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-//const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 //const analytics = getAnalytics(app);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
