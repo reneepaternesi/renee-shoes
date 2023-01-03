@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import ItemList from './ItemList'
 import { useParams } from 'react-router-dom';
 import Loader from './Loader';
 import { getDocs, collection, getFirestore, query, where } from 'firebase/firestore'
 
-const ItemListContainer = ({greeting}) => {
+const ItemListContainer = () => {
   const { categoryId } = useParams()
   const [items, setItems] = useState([])
   const [loaded, setLoaded] = useState(false)
@@ -24,20 +23,8 @@ const ItemListContainer = ({greeting}) => {
     })
   }, [categoryId])
 
-  const GretingWrapper = styled.div`
-    font-family: 'Rock Salt', curave;
-    display:block;
-    margin: 50px auto;
-
-    span {
-      color: #6c757d;
-      font-weight: bold;
-    }
-  `
-
   return (
     <>
-    <GretingWrapper>Bienvend@ <span>{greeting}</span></GretingWrapper>
     {!loaded && 
       <Loader />
     }
