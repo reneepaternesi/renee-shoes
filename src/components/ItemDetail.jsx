@@ -180,7 +180,7 @@ const ItemDetail = ({loaded, product}) => {
               <span>
                 <ProductPrice >Precio: {getCurrency(product.price)}</ProductPrice>
                 <ProductStock>Cantidad Disponible: {product.stock} </ProductStock>
-                {isShoe() &&
+                {isShoe() && product.stock > 0 &&
                 <SizesDropdownButton id="size-selector" title={size || dropdownSizes[0].name}>
                   {dropdownSizes.map(size => 
                     <Dropdown.Item value={size.value} onClick={() => setSize(size.value)}>{size.name}</Dropdown.Item>
@@ -189,8 +189,10 @@ const ItemDetail = ({loaded, product}) => {
               }
               </span>
               <span>
-                <ItemCount isShoe={isShoe()} maxValue={product.stock} onAdd={handleAddProduct} sizeSelected={size>0}/>
-              </span>
+                { product.stock > 0 &&
+                  <ItemCount isShoe={isShoe()} maxValue={product.stock} onAdd={handleAddProduct} sizeSelected={size>0}/>
+                }
+                </span>
             </GridContainer>
             {products.length > 0 && 
               <CheckoutBtn to='/cart'>Terminar mi compra</CheckoutBtn>

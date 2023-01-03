@@ -10,6 +10,7 @@ const ItemList = ({items}) => {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+    margin-top: 50px;
   `
 
   return (

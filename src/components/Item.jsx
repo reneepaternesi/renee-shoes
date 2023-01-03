@@ -13,6 +13,26 @@ const Item = ({product}) => {
     
     img {
       cursor: pointer;
+      position: relative;
+      z-index: 0;
+    }
+
+    a.unavailable::after {
+      content: "No Disponible";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 78%;
+      background-color: #d0dede;
+      opacity: .7;
+      z-index: 1;
+      font-size: 20px;
+      color: grey;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   `
 
@@ -34,8 +54,8 @@ const Item = ({product}) => {
 
   return (
       <ItemContainer style={{ width: '18rem' }}>
-        <Link to={`/product/${product.id}`}>
-        <Card.Img variant="top" src={product.pictureUrl} />
+        <Link to={`/product/${product.id}`} className={`${product.stock === 0 ? "unavailable" : ""}`}>
+          <Card.Img variant="top" src={product.pictureUrl} />
         </Link>
         <Card.Body>
           <Card.Title>{product.title}</Card.Title>

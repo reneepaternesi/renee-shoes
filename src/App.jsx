@@ -10,9 +10,9 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Navbar />
+        <Navbar  greeting="Renée"/>
         <Routes>
-          <Route path="/" element={<ItemListContainer greeting="Renée"/>} />
+          <Route path="/" element={<ItemListContainer/>} />
           <Route path="/category/:categoryId" element={<ItemListContainer greeting="Renée"/>} />
           <Route path="/about" element={<About/>} />
           <Route path="/product/:productId" element={<ItemDetailContainer />} />

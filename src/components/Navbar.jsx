@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useCart } from '../context/cartContext'
 
-const Navbar = () => {
+const Navbar = ({greeting}) => {
   const { productsTotal } = useCart()
 
 
@@ -113,6 +113,17 @@ const Navbar = () => {
     }
   `
 
+  const GretingWrapper = styled.div`
+  font-family: 'Rock Salt', curave;
+  display:block;
+  margin: 50px auto;
+
+  span {
+    color: #6c757d;
+    font-weight: bold;
+  }
+`
+
   return (
     <NavBarContainer>
      <BrandName>
@@ -130,7 +141,7 @@ const Navbar = () => {
           <Link to={'/about'}>Nosotros</Link>
         </NavItem>
         <NavItem>
-          <Nav.Link href="/">Login</Nav.Link>
+          <Nav.Link href="/"> <GretingWrapper>Bienvend@ <span>{greeting}</span></GretingWrapper></Nav.Link>
         </NavItem>
       </NavContainer>
       {productsTotal > 0 && 
